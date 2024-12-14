@@ -1,35 +1,27 @@
-import 'package:scientific_calc/app/app.bottomsheets.dart';
-import 'package:scientific_calc/app/app.dialogs.dart';
-import 'package:scientific_calc/app/app.locator.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
+import '../../app/app.locator.dart';
+import '../../services/calculator_service.dart';
 
 class HomeViewModel extends BaseViewModel {
-  final _dialogService = locator<DialogService>();
-  final _bottomSheetService = locator<BottomSheetService>();
+  final _calculatorService = locator<CalculatorService>();
 
-  String get counterLabel => 'Counter is: $_counter';
+  String get expression => _calculatorService.expression;
+  String get result => _calculatorService.result;
+  String get error => _calculatorService.error;
 
-  int _counter = 0;
-
-  void incrementCounter() {
-    _counter++;
-    rebuildUi();
+  void handleKeyPress(String key) {
+    _calculatorService.appendToExpression(key);
   }
 
-  void showDialog() {
-    _dialogService.showCustomDialog(
-      variant: DialogType.infoAlert,
-      title: 'Steve Rocks!',
-      description: 'Give steve $_counter stars on Github',
-    );
+  void clearAll() {
+    _calculatorService.clearAll();
   }
 
-  void showBottomSheet() {
-    _bottomSheetService.showCustomSheet(
-      variant: BottomSheetType.notice,
-      title: 'title',
-      description: 'desc',
-    );
+  void delete() {
+    _calculatorService.deleteLast();
+  }
+
+  void calculate() {
+    _calculatorService.calculate();
   }
 }
