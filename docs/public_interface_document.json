@@ -653,6 +653,149 @@
       "dependencies": [
         "package:flutter/material.dart"
       ]
+    },
+    {
+      "name": "lib/utils/number_formatter.dart",
+      "description": "The NumberFormatter class is responsible for formatting numeric values in a consistent and user-friendly way. It provides a central point for handling number formatting across the application, ensuring a uniform presentation of numeric data.",
+      "class_diagram": "@startuml\nclass NumberFormatter {\n  + static format(double value, {int maxDecimalPlaces = 10}): String\n  - static _formatScientific(double value, int maxDecimalPlaces): String\n}\n@enduml",
+      "methods": [
+        {
+          "name": "format",
+          "description": "Formats a double value with a specified maximum number of decimal places. It automatically switches to scientific notation if the value is too large or too small.",
+          "parameters": [
+            "value",
+            "maxDecimalPlaces"
+          ],
+          "return_type": "String"
+        },
+        {
+          "name": "_formatScientific",
+          "description": "Formats a double value in scientific notation with a specified maximum number of decimal places for the mantissa.",
+          "parameters": [
+            "value",
+            "maxDecimalPlaces"
+          ],
+          "return_type": "String"
+        }
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "lib/models/calculator_error.dart",
+      "description": "This Dart file defines the `CalculatorError` class, which represents errors that can occur during the execution of a calculator application. It provides a standardized way to handle and report errors in the calculator's functionality.",
+      "class_diagram": "@startuml\nclass CalculatorError {\n  -ErrorCode code\n  -String message\n  +String toString()\n}\n\nenum ErrorCode {\n  invalidExpression\n  divisionByZero\n  overflow\n  underflow\n  invalidOperation\n  syntaxError\n}\n@enduml",
+      "methods": [
+        {
+          "name": "CalculatorError",
+          "description": "Constructor for the CalculatorError class, which takes the error code and error message as required parameters.",
+          "parameters": [
+            "code",
+            "message"
+          ],
+          "return_type": null
+        },
+        {
+          "name": "toString",
+          "description": "Overrides the default toString() method to return the error message.",
+          "parameters": null,
+          "return_type": "String"
+        }
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "lib/models/calculation_result.dart",
+      "description": "The CalculationResult class represents the result of a calculation, which can be either a value or an error. It encapsulates the calculated value, any error that occurred, the formatted value, and whether the value is in scientific notation. This class is responsible for managing the state and data flow of calculation results in the application.",
+      "class_diagram": "@startuml\nclass CalculationResult {\n  + final double? value\n  + final CalculatorError? error\n  + final String formattedValue\n  + final bool isScientificNotation\n  + bool get hasError\n  + bool get hasValue\n  + factory CalculationResult.error(CalculatorError error)\n  + factory CalculationResult.value(double value, String formattedValue, {bool isScientificNotation = false})\n}\n",
+      "methods": [
+        {
+          "name": "CalculationResult",
+          "description": "Constructor for the CalculationResult class. Initializes the class with the provided values.",
+          "parameters": [
+            "this.value",
+            "this.error",
+            "required this.formattedValue",
+            "this.isScientificNotation = false"
+          ],
+          "return_type": null
+        },
+        {
+          "name": "hasError",
+          "description": "Getter that returns true if the CalculationResult has an error, false otherwise.",
+          "parameters": null,
+          "return_type": "bool"
+        },
+        {
+          "name": "hasValue",
+          "description": "Getter that returns true if the CalculationResult has a value, false otherwise.",
+          "parameters": null,
+          "return_type": "bool"
+        },
+        {
+          "name": "CalculationResult.error",
+          "description": "Factory constructor that creates a CalculationResult with an error.",
+          "parameters": [
+            "CalculatorError error"
+          ],
+          "return_type": "CalculationResult"
+        },
+        {
+          "name": "CalculationResult.value",
+          "description": "Factory constructor that creates a CalculationResult with a value.",
+          "parameters": [
+            "double value",
+            "String formattedValue",
+            "{bool isScientificNotation = false}"
+          ],
+          "return_type": "CalculationResult"
+        }
+      ],
+      "dependencies": [
+        "calculator_error.dart"
+      ]
+    },
+    {
+      "name": "lib/utils/validation_utils.dart",
+      "description": "The ValidationUtils class is responsible for validating user input in a calculator application. It provides methods to check the validity of mathematical expressions, as well as the validity of numerical values. This class helps ensure the integrity and stability of the calculator's core functionality by catching and reporting potential issues with the user's input.",
+      "class_diagram": "@startuml\nclass ValidationUtils {\n  + static bool isValidExpression(String expression)\n  + static bool _isOperator(String char)\n  + static CalculatorError? validateNumber(double number)\n  + static bool isCompleteExpression(String expression)\n}\n\nclass CalculatorError {\n  + int code\n  + String message\n}\n\nclass CalculatorConstants {\n  + static List<String> basicOperators\n  + static List<String> scientificOperators\n}\n@enduml",
+      "methods": [
+        {
+          "name": "isValidExpression",
+          "description": "Checks if the given expression is valid by verifying the balance of parentheses, the sequence of operators, and the expression's ending.",
+          "parameters": [
+            "String expression"
+          ],
+          "return_type": "bool"
+        },
+        {
+          "name": "_isOperator",
+          "description": "Helper method to check if a given character is a valid basic operator.",
+          "parameters": [
+            "String char"
+          ],
+          "return_type": "bool"
+        },
+        {
+          "name": "validateNumber",
+          "description": "Validates a given numeric value to ensure it is within the expected range and does not represent an invalid operation (e.g., overflow, underflow, or NaN).",
+          "parameters": [
+            "double number"
+          ],
+          "return_type": "CalculatorError?"
+        },
+        {
+          "name": "isCompleteExpression",
+          "description": "Checks if the given expression is a complete and valid mathematical expression, including handling of incomplete scientific functions.",
+          "parameters": [
+            "String expression"
+          ],
+          "return_type": "bool"
+        }
+      ],
+      "dependencies": [
+        "../models/calculator_error.dart",
+        "../utils/constants.dart"
+      ]
     }
   ],
   "dependencies": [
