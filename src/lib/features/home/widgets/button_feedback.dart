@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../ui/common/app_colors.dart';
 
 class ButtonFeedback extends StatefulWidget {
   final Widget child;
@@ -56,8 +57,16 @@ class _ButtonFeedbackState extends State<ButtonFeedback>
         scale: _scaleAnimation,
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
             color: widget.feedbackColor,
+            boxShadow: [
+              BoxShadow(
+                color:
+                    (widget.feedbackColor ?? kcDarkGreyColor).withOpacity(0.3),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: widget.child,
         ),

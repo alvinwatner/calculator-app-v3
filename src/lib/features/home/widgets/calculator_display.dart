@@ -15,8 +15,12 @@ class CalculatorDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: kcDisplayBackground,
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
@@ -27,11 +31,12 @@ class CalculatorDisplay extends StatelessWidget {
               fontSize: 24,
               color: kcLightGrey,
               fontFamily: 'monospace',
+              letterSpacing: 1.2,
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Text(
             error.isNotEmpty ? error : result,
             style: TextStyle(
@@ -39,6 +44,14 @@ class CalculatorDisplay extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: error.isNotEmpty ? Colors.red : Colors.white,
               fontFamily: 'monospace',
+              letterSpacing: 1.5,
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(0, 2),
+                  blurRadius: 4,
+                ),
+              ],
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

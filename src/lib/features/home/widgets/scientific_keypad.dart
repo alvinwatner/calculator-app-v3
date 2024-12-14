@@ -19,12 +19,16 @@ class ScientificKeypad extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: kcBackgroundColor,
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: GridView.count(
         crossAxisCount: 4,
         childAspectRatio: 1.3,
-        mainAxisSpacing: 8,
-        crossAxisSpacing: 8,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
         children: [
           _buildButton('sin', color: kcMediumGrey),
           _buildButton('cos', color: kcMediumGrey),
@@ -37,19 +41,19 @@ class ScientificKeypad extends StatelessWidget {
           _buildButton('7'),
           _buildButton('8'),
           _buildButton('9'),
-          _buildButton('\u00f7', color: kcMediumGrey),
+          _buildButton('÷', color: kcButtonHighlight),
           _buildButton('4'),
           _buildButton('5'),
           _buildButton('6'),
-          _buildButton('\u00d7', color: kcMediumGrey),
+          _buildButton('×', color: kcButtonHighlight),
           _buildButton('1'),
           _buildButton('2'),
           _buildButton('3'),
-          _buildButton('-', color: kcMediumGrey),
+          _buildButton('-', color: kcButtonHighlight),
           _buildButton('.'),
           _buildButton('0'),
           _buildButton('=', color: kcPrimaryColorDark, onPressed: onCalculate),
-          _buildButton('+', color: kcMediumGrey),
+          _buildButton('+', color: kcButtonHighlight),
         ],
       ),
     );
@@ -62,10 +66,17 @@ class ScientificKeypad extends StatelessWidget {
       child: Center(
         child: Text(
           text,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 24,
             color: Colors.white,
             fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.3),
+                offset: const Offset(0, 2),
+                blurRadius: 2,
+              ),
+            ],
           ),
         ),
       ),
