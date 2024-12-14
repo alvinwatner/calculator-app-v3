@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../ui/common/app_colors.dart';
 
 class CalculatorDisplay extends StatelessWidget {
   final String expression;
@@ -16,7 +17,10 @@ class CalculatorDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16.0),
-      alignment: Alignment.bottomRight,
+      decoration: BoxDecoration(
+        color: kcDarkGreyColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
@@ -25,7 +29,8 @@ class CalculatorDisplay extends StatelessWidget {
             expression,
             style: const TextStyle(
               fontSize: 24,
-              color: Colors.grey,
+              color: kcLightGrey,
+              fontFamily: 'monospace',
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -37,6 +42,7 @@ class CalculatorDisplay extends StatelessWidget {
               fontSize: 48,
               fontWeight: FontWeight.bold,
               color: error.isNotEmpty ? Colors.red : Colors.white,
+              fontFamily: 'monospace',
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
