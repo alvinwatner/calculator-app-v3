@@ -1,7 +1,7 @@
 {
   "package_name": "com.steve.scientific_calc",
-  "project_description": "The scientific calculator app is a Flutter project that follows the Stacked architecture. It provides a range of scientific calculation features, including basic arithmetic operations, trigonometric functions, and expression evaluation. The app allows users to perform calculations, view results, and manage the calculator state through various UI components such as the keypad, display, and dialog/bottom sheet interactions.",
-  "architecture_overview": "The application uses the Stacked architecture, which separates the app into distinct layers: app setup, features, UI components, and utilities. The app.dart file sets up the app structure, routes, services, and dependencies using the Stacked annotations. The app.router.dart file manages the navigation and routing, while the app.locator.dart file handles the dependency injection. The app features, such as the home view and startup view, are implemented in separate folders and use ViewModels to handle the business logic and state management. The UI components, like the calculator display and keypad, are decoupled from the view models and provide a modular and reusable design. The utilities folder contains the calculator expression evaluator and other common functions.",
+  "project_description": "The scientific calculator app is a comprehensive Flutter project that follows the Stacked architecture. It provides a wide range of scientific calculation features, including basic arithmetic operations, trigonometric functions, and advanced expression evaluation. The app allows users to perform complex calculations, view results, and manage the calculator state through various UI components like the keypad, display, and dialog/bottom sheet interactions.",
+  "architecture_overview": "The application's architecture is based on the Stacked pattern, which separates the app into distinct layers: app setup, features, UI components, and utilities. The app.dart file sets up the app structure, routes, services, and dependencies using Stacked annotations. The app.router.dart file manages the navigation and routing, while the app.locator.dart file handles the dependency injection. The app features, such as the home view and startup view, are implemented in separate folders and use ViewModels to handle the business logic and state management. The UI components, like the calculator display and keypad, are decoupled from the view models and provide a modular and reusable design. The utilities folder contains the calculator expression evaluator and other common functions.",
   "files": [
     {
       "name": "lib/app/app.dart",
@@ -795,6 +795,47 @@
       "dependencies": [
         "../models/calculator_error.dart",
         "../utils/constants.dart"
+      ]
+    },
+    {
+      "name": "lib/features/home/widgets/error_display.dart",
+      "description": "The `ErrorDisplay` widget is responsible for rendering an error message to the user in a visually appealing and informative way. It is designed to be used within the home feature of the application.",
+      "class_diagram": "@startuml\nclass ErrorDisplay {\n  +String error\n  +VoidCallback onDismiss\n  +build(context): Widget\n}\n@enduml",
+      "methods": [
+        {
+          "name": "build",
+          "description": "Renders the error message UI, including an error icon, the error text, and a close button to dismiss the error.",
+          "parameters": [
+            "context"
+          ],
+          "return_type": "Widget"
+        }
+      ],
+      "dependencies": [
+        "package:flutter/material.dart",
+        "lib/ui/common/app_colors.dart"
+      ]
+    },
+    {
+      "name": "lib/features/home/widgets/button_feedback.dart",
+      "description": "The `ButtonFeedback` class is responsible for providing a customizable button with a visual feedback effect when pressed. It enhances the user experience by providing a subtle animation that gives the impression of the button being 'pressed down' and then released.",
+      "class_diagram": "@startuml\n  class ButtonFeedback {\n    -late AnimationController _controller\n    -late Animation<double> _scaleAnimation\n    +final Widget child\n    +final VoidCallback onPressed\n    +final Color? feedbackColor\n    +State<ButtonFeedback> createState()\n    -Future<void> _handleTap()\n  }\n  @enduml",
+      "methods": [
+        {
+          "name": "createState",
+          "description": "Creates the state object for this widget.",
+          "parameters": null,
+          "return_type": "State<ButtonFeedback>"
+        },
+        {
+          "name": "_handleTap",
+          "description": "Handles the tap gesture on the button, triggering the animation and calling the provided onPressed callback.",
+          "parameters": null,
+          "return_type": "Future<void>"
+        }
+      ],
+      "dependencies": [
+        "package:flutter/material.dart"
       ]
     }
   ],
