@@ -7,7 +7,7 @@ class HomeViewModel extends BaseViewModel {
 
   String get expression => _calculatorService.expression;
   String get result => _calculatorService.result;
-  String get error => _calculatorService.error;
+  String get errorMessage => _calculatorService.error; // Renamed from error to errorMessage
 
   void handleKeyPress(String key) {
     _calculatorService.appendToExpression(key);

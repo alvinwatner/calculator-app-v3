@@ -23,7 +23,7 @@ class HomeView extends StackedView<HomeViewModel> {
               child: CalculatorDisplay(
                 expression: viewModel.expression,
                 result: viewModel.result,
-                error: viewModel.error,
+                error: viewModel.errorMessage, // Updated to use errorMessage
               ),
             ),
             Expanded(
