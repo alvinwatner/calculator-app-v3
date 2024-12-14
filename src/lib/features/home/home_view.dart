@@ -3,6 +3,7 @@ import 'package:stacked/stacked.dart';
 import 'home_viewmodel.dart';
 import 'widgets/calculator_display.dart';
 import 'widgets/scientific_keypad.dart';
+import 'widgets/calculator_theme.dart';
 
 class HomeView extends StackedView<HomeViewModel> {
   const HomeView({Key? key}) : super(key: key);
@@ -13,29 +14,40 @@ class HomeView extends StackedView<HomeViewModel> {
     HomeViewModel viewModel,
     Widget? child,
   ) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              flex: 2,
-              child: CalculatorDisplay(
-                expression: viewModel.expression,
-                result: viewModel.result,
-                error: viewModel.errorMessage, // Updated to use errorMessage
+    return Theme(
+      data: CalculatorTheme.darkPurpleTheme,
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(24),
+                    ),
+                  ),
+                  child: CalculatorDisplay(
+                    expression: viewModel.expression,
+                    result: viewModel.result,
+                    error: viewModel.errorMessage,
+                  ),
+                ),
               ),
-            ),
-            Expanded(
-              flex: 5,
-              child: ScientificKeypad(
-                onKeyPressed: viewModel.handleKeyPress,
-                onClear: viewModel.clearAll,
-                onDelete: viewModel.delete,
-                onCalculate: viewModel.calculate,
+              const Divider(height: 1),
+              Expanded(
+                flex: 5,
+                child: ScientificKeypad(
+                  onKeyPressed: viewModel.handleKeyPress,
+                  onClear: viewModel.clearAll,
+                  onDelete: viewModel.delete,
+                  onCalculate: viewModel.calculate,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
