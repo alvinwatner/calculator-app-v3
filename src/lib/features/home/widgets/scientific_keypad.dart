@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../ui/common/app_colors.dart';
+import 'button_feedback.dart';
 
 class ScientificKeypad extends StatelessWidget {
   final Function(String) onKeyPressed;
@@ -36,11 +37,11 @@ class ScientificKeypad extends StatelessWidget {
           _buildButton('7'),
           _buildButton('8'),
           _buildButton('9'),
-          _buildButton('÷', color: kcMediumGrey),
+          _buildButton('\u00f7', color: kcMediumGrey),
           _buildButton('4'),
           _buildButton('5'),
           _buildButton('6'),
-          _buildButton('×', color: kcMediumGrey),
+          _buildButton('\u00d7', color: kcMediumGrey),
           _buildButton('1'),
           _buildButton('2'),
           _buildButton('3'),
@@ -55,20 +56,16 @@ class ScientificKeypad extends StatelessWidget {
   }
 
   Widget _buildButton(String text, {Color? color, VoidCallback? onPressed}) {
-    return Material(
-      color: color ?? kcDarkGreyColor,
-      borderRadius: BorderRadius.circular(8),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: onPressed ?? () => onKeyPressed(text),
-        child: Center(
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 24,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+    return ButtonFeedback(
+      feedbackColor: color ?? kcDarkGreyColor,
+      onPressed: onPressed ?? () => onKeyPressed(text),
+      child: Center(
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 24,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
