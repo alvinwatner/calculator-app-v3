@@ -1,96 +1,118 @@
 import 'dart:math' as math;
+import '../models/calculator_error.dart';
 
 class ExpressionEvaluator {
   double evaluate(String expression) {
     if (expression.isEmpty) return 0;
 
     try {
-      // Replace scientific functions
+      // Replace scientific functions and handle negative numbers
       expression = _replaceScientificFunctions(expression);
 
       // Replace operators
-      expression = expression.replaceAll('×', '*');
-      expression = expression.replaceAll('÷', '/');
+      expression = expression.replaceAll('\u00d7', '*');
+      expression = expression.replaceAll('\u00f7', '/');
       expression = expression.replaceAll('^', '**');
 
-      // Evaluate basic arithmetic
+      // Evaluate the expression
       return _evaluateExpression(expression);
     } catch (e) {
-      throw Exception('Invalid expression');
+      throw CalculatorError(
+        code: ErrorCode.invalidExpression,
+        message: 'Invalid expression',
+      );
     }
   }
 
   String _replaceScientificFunctions(String expression) {
-    expression = expression.replaceAllMapped(RegExp(r'sin\(([-0-9.]+)\)'),
-        (match) => math.sin(double.parse(match.group(1)!)).toString());
+    // Handle nested functions
+    while (expression.contains('sin(') ||
+        expression.contains('cos(') ||
+        expression.contains('tan(')) {
+      expression = expression.replaceAllMapped(RegExp(r'sin\(([-0-9.]+)\)'),
+          (match) => math.sin(double.parse(match.group(1)!)).toString());
 
-    expression = expression.replaceAllMapped(RegExp(r'cos\(([-0-9.]+)\)'),
-        (match) => math.cos(double.parse(match.group(1)!)).toString());
+      expression = expression.replaceAllMapped(RegExp(r'cos\(([-0-9.]+)\)'),
+          (match) => math.cos(double.parse(match.group(1)!)).toString());
 
-    expression = expression.replaceAllMapped(RegExp(r'tan\(([-0-9.]+)\)'),
-        (match) => math.tan(double.parse(match.group(1)!)).toString());
-
+      expression = expression.replaceAllMapped(RegExp(r'tan\(([-0-9.]+)\)'),
+          (match) => math.tan(double.parse(match.group(1)!)).toString());
+    }
     return expression;
   }
 
   double _evaluateExpression(String expression) {
-    // Simple expression evaluator for basic arithmetic
-    // This is a basic implementation - a more robust parser would be needed for production
+    // Handle parentheses first
+    while (expression.contains('(')) {
+      final openIndex = expression.lastIndexOf('(');
+      final closeIndex = expression.indexOf(')', openIndex);
+      if (closeIndex == -1) {
+        throw CalculatorError(
+          code: ErrorCode.syntaxError,
+          message: 'Mismatched parentheses',
+        );
+      }
 
-    if (expression.contains('(')) {
-      // Handle parentheses
-      int openIndex = expression.lastIndexOf('(');
-      int closeIndex = expression.indexOf(')', openIndex);
-      String subExpr = expression.substring(openIndex + 1, closeIndex);
-      double result = _evaluateExpression(subExpr);
-      String newExpr = expression.substring(0, openIndex) +
+      final subExpr = expression.substring(openIndex + 1, closeIndex);
+      final result = _evaluateExpression(subExpr);
+      expression = expression.substring(0, openIndex) +
           result.toString() +
           expression.substring(closeIndex + 1);
-      return _evaluateExpression(newExpr);
     }
 
     // Evaluate exponents
-    if (expression.contains('**')) {
-      List<String> parts = expression.split('**');
-      return math
-          .pow(_evaluateExpression(parts[0]), _evaluateExpression(parts[1]))
-          .toDouble();
+    while (expression.contains('**')) {
+      final regex = RegExp(r'([-+]?\d*\.?\d+)\*\*([-+]?\d*\.?\d+)');
+      final match = regex.firstMatch(expression);
+      if (match == null) break;
+
+      final base = double.parse(match.group(1)!);
+      final exponent = double.parse(match.group(2)!);
+      final result = math.pow(base, exponent);
+
+      expression =
+          expression.replaceFirst(regex, result.toString(), match.start);
     }
 
-    // Split by addition/subtraction
-    List<String> addParts = expression.split(RegExp(r'(?=[-+])'));
-    if (addParts.length > 1) {
-      double result = _evaluateExpression(addParts[0]);
-      for (int i = 1; i < addParts.length; i++) {
-        String part = addParts[i];
-        if (part.startsWith('+')) {
-          result += _evaluateExpression(part.substring(1));
-        } else if (part.startsWith('-')) {
-          result -= _evaluateExpression(part.substring(1));
+    // Evaluate multiplication and division
+    while (expression.contains('*') || expression.contains('/')) {
+      final regex = RegExp(r'([-+]?\d*\.?\d+)[*/]([-+]?\d*\.?\d+)');
+      final match = regex.firstMatch(expression);
+      if (match == null) break;
+
+      final a = double.parse(match.group(1)!);
+      final b = double.parse(match.group(2)!);
+      final op = expression[match.start + match.group(1)!.length];
+
+      double result;
+      if (op == '*') {
+        result = a * b;
+      } else {
+        if (b == 0) {
+          throw CalculatorError(
+            code: ErrorCode.divisionByZero,
+            message: 'Division by zero',
+          );
         }
+        result = a / b;
       }
-      return result;
+
+      expression =
+          expression.replaceFirst(regex, result.toString(), match.start);
     }
 
-    // Split by multiplication/division
-    List<String> mulParts = expression.split(RegExp(r'[*/]'));
-    if (mulParts.length > 1) {
-      double result = _evaluateExpression(mulParts[0]);
-      List<String> operators = expression.split(RegExp(r'[0-9.]+'))
-        ..removeWhere((e) => e.isEmpty);
-      for (int i = 0; i < operators.length; i++) {
-        String operator = operators[i];
-        double nextNum = _evaluateExpression(mulParts[i + 1]);
-        if (operator == '*') {
-          result *= nextNum;
-        } else if (operator == '/') {
-          if (nextNum == 0) throw Exception('Division by zero');
-          result /= nextNum;
-        }
+    // Evaluate addition and subtraction
+    List<String> parts = expression.split(RegExp(r'(?=[-+])'));
+    double result = double.parse(parts[0]);
+    for (int i = 1; i < parts.length; i++) {
+      String part = parts[i];
+      if (part.startsWith('+')) {
+        result += double.parse(part.substring(1));
+      } else if (part.startsWith('-')) {
+        result -= double.parse(part.substring(1));
       }
-      return result;
     }
 
-    return double.parse(expression);
+    return result;
   }
 }
