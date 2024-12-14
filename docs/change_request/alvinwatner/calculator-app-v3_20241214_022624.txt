@@ -1,0 +1,1 @@
+A simple fully function scientific calculator app that support scientific and math operation
