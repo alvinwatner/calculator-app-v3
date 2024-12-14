@@ -7,10 +7,26 @@ class HomeViewModel extends BaseViewModel {
 
   String get expression => _calculatorService.expression;
   String get result => _calculatorService.result;
-  String get errorMessage => _calculatorService.error; // Renamed from error to errorMessage
+  String get errorMessage => _calculatorService.error;
 
   void handleKeyPress(String key) {
-    _calculatorService.appendToExpression(key);
+    switch (key) {
+      case '=':
+        calculate();
+        break;
+      case 'AC':
+        clearAll();
+        break;
+      case 'DEL':
+        delete();
+        break;
+      default:
+        _calculatorService.appendToExpression(key);
+    }
+  }
+
+  void calculate() {
+    _calculatorService.calculate();
   }
 
   void clearAll() {
@@ -19,9 +35,5 @@ class HomeViewModel extends BaseViewModel {
 
   void delete() {
     _calculatorService.deleteLast();
-  }
-
-  void calculate() {
-    _calculatorService.calculate();
   }
 }
